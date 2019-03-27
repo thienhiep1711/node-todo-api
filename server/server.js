@@ -7,7 +7,6 @@ var {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -16,7 +15,7 @@ app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
   var todo = new Todo({
-    text: req.body.text,
+    title: req.body.title,
 
   })
   todo.save().then((doc) => {
@@ -80,7 +79,7 @@ app.delete('/todos/:id', (req, res) => {
 
 app.patch('/todos/:id', (req, res) => {
   var id = req.params.id;
-  var body = _.pick(req.body, ['text','completed']);
+  var body = _.pick(req.body, ['title', 'note', 'completed']);
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
   }
@@ -90,6 +89,7 @@ app.patch('/todos/:id', (req, res) => {
   } else {
     body.completed = false;
     body.completedAt = null;
+    body.note = '';
   }
 
   Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
