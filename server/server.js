@@ -76,17 +76,6 @@ app.delete('/todos/:id', authenticate , (req, res) => {
   }).catch((e) => {
     res.status(400).send();
   })
-  // get the id
-
-  // validate the id -> not valid? return 404
-
-  // remove todo by id
-    // success
-        // if no doc sent 404
-        // if doc, sent doc back with 200
-    // error
-        // 400 with empty body
-
 })
 
 app.patch('/todos/:id', authenticate, (req, res) => {
@@ -166,46 +155,5 @@ app.delete('/users/me/token', authenticate, (req, res) => {
 app.listen(port , () => {
   console.log(`Started on port ${port}`)
 });
-
-
-
-
-
-// var newTodo = new Todo({
-//   text: 'Cook dinner',
-
-// })
-
-// newTodo.save().then((doc) => {
-//   console.log('Save todo', doc);
-// }, (e) => {
-//   console.log('Unable to save todo');
-// })
-
-// var otherTodo = new Todo({
-//   text:'    Edit this video',
-// });
-
-// otherTodo.save().then((doc) => {
-//   console.log('Save todo:', doc);
-// }, (e) => {
-//   console.log('Unable to save todo', e);
-// })
-
-
-//User
-//Email - requierd it - trim it, set type - set minlength of 1
-// var user = new User({
-//   email:'thienhiep171193@gmail.com'
-// })
-
-// user.save().then((doc) => {
-//   console.log('Save todo:', doc);
-// }, (e) => {
-//   console.log('Unable to save todo', e);
-// })
-
-
-
 
 module.exports = {app};
