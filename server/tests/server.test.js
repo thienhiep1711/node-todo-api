@@ -137,16 +137,13 @@ describe('DELETE /todos/:id', () => {
       .delete(`/todos/${hexId}`)
       .set('x-auth', users[1].tokens[0].token)
       .expect(404)
-      .expect((res) => {
-        expect(res.body._id).toBe(hexId);
-      })
       .end((err, res) => {
         if (err) {
           return done(err);
         }
 
         Todo.findById(hexId).then((todo) => {
-          expect(todo).toBeFalsy();
+          expect(todo).toBeTruthy();
           done();
         }).catch((e) => done(e));
       });
@@ -157,6 +154,7 @@ describe('DELETE /todos/:id', () => {
 
     request(app)
       .delete(`/todos/${hexId}`)
+      .set('x-auth', users[1].tokens[0].token)
       .expect(404)
       .end(done);
   });
@@ -175,8 +173,10 @@ describe('UPDATE /todos/:id', () => {
 
     var hexID = todos[0]._id.toHexString();
     var title = 'This should to be new title'
+    //auth as first user
     request(app)
       .patch(`/todos/${hexID}`)
+      .set('x-auth', users[0].tokens[0].token)
       .send({
         completed:true,
         title
@@ -189,13 +189,29 @@ describe('UPDATE /todos/:id', () => {
         expect(typeof res.body.todo.completedAt).toBe('number');
       })
       .end(done)
-    //grab is of first item
+      // deuplicate above test
+      //try to update frst todo as second user
+      // assert 404 response
+  })
 
-    //updated title, set completed true
+  it('should update the todo create by other user', (done) => {
 
-    //200
+    var hexID = todos[0]._id.toHexString();
+    var title = 'This should to be new title'
+    //auth as first user
+    request(app)
+      .patch(`/todos/${hexID}`)
+      .set('x-auth', users[1].tokens[0].token)
+      .send({
+        completed:true,
+        title
 
-    // title is changed, completed is true, completedAt is a number . toBe
+      })
+      .expect(404)
+      .end(done)
+      // deuplicate above test
+      //try to update frst todo as second user
+      // assert 404 response
   })
 
   it('should clear completedAt when todo is not completed', (done) => {
@@ -203,6 +219,7 @@ describe('UPDATE /todos/:id', () => {
     var title = 'This should to be new title'
     request(app)
       .patch(`/todos/${hexID}`)
+      .set('x-auth', users[1].tokens[0].token)
       .send({
         completed:false,
         title
