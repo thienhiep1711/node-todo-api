@@ -122,7 +122,7 @@ USER MODEL
 
 // POST /user
 app.post('/users', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password']);
+  var body = _.pick(req.body, ['email', 'password', 'name']);
   var user = new User(body);
 
   user.save().then(() => {
